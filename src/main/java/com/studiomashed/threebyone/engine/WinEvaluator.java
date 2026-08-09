@@ -19,18 +19,28 @@ public final class WinEvaluator {
                     "A 3x1 result must contain exactly 3 symbols");
         }
 
-        Symbol target = symbols.stream()
-                .filter(symbol -> symbol != Symbol.WILD)
-                .findFirst()
-                .orElse(Symbol.WILD);
+        Symbol targetSymbol = Symbol.WILD;
 
-        boolean allMatch = symbols.stream()
-                .allMatch(symbol -> symbol == target || symbol == Symbol.WILD);
+        for (Symbol symbol : symbols) {
+            if (symbol != Symbol.WILD) {
+                targetSymbol = symbol;
+                break;
+            }
+        }
 
-        if (!allMatch) {
+        boolean allMatchTarget = true;
+
+        for (Symbol symbol : symbols) {
+            if (symbol != targetSymbol && symbol != Symbol.WILD) {
+                allMatchTarget = false;
+                break;
+            }
+        }
+
+        if (!allMatchTarget) {
             return 0;
         }
 
-        return paytable.payoutMultiplierFor(target);
+        return paytable.payoutMultiplierFor(targetSymbol);
     }
 }

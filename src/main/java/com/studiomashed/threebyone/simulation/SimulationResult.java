@@ -8,21 +8,26 @@ public record SimulationResult(
         long totalPaidInPence,
         long winningSpins,
         long largestPayoutInPence) {
+
     @JsonProperty
     public double rtpPercentage() {
-        return totalStakedInPence == 0
-                ? 0.0
-                : (double) totalPaidInPence
-                        / totalStakedInPence
-                        * 100.0;
+        if (totalStakedInPence == 0) {
+            return 0.0;
+        }
+
+        double rtp = (double) totalPaidInPence / totalStakedInPence;
+
+        return rtp * 100.0;
     }
 
     @JsonProperty
     public double hitFrequencyPercentage() {
-        return spins == 0
-                ? 0.0
-                : (double) winningSpins
-                        / spins
-                        * 100.0;
+        if (spins == 0) {
+            return 0.0;
+        }
+
+        double hitFrequency = (double) winningSpins / spins;
+
+        return hitFrequency * 100.0;
     }
 }
