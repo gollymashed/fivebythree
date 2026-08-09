@@ -1,28 +1,62 @@
 import { useState } from "react";
 import { spin } from "./api/slotApi";
-import type { SpinResult } from "./types/slot";
+import { Reel } from "./components/Reel";
+import type { SlotSymbol, SpinResult } from "./types/slot";
+import "./App.css";
 
 function App() {
   const [result, setResult] = useState<SpinResult | null>(null);
+  const [isSpinning, setIsSpinning] = useState(false);
+
+  const symbols: SlotSymbol[] = result?.outcome.symbols ?? [
+    "CHERRY",
+    "LEMON",
+    "BELL",
+  ];
 
   async function handleSpin() {
-    const spinResult = await spin(100);
-    setResult(spinResult);
+    setIsSpinning(true);
+
+    try {
+      const spinResult = await spin(100);
+      setResult(spinResult);
+    } finally {
+      setIsSpinning(false);
+    }
   }
 
   return (
-    <main>
-      <h1>3x1</h1>
+    <main className="page">
+      <div className="machine">
+        <h1>3×1</h1>
 
-      <button onClick={handleSpin}>
-        Spin £1
-      </button>
+        <div className="reels">
+          {symbols.map((symbol, index) => (
+            <Reel key={index} symbol={symbol} />
+          ))}
+        </div>
 
-      {result && (
-        <pre>
-          {JSON.stringify(result, null, 2)}
-        </pre>
-      )}
+        <button
+          className="spin-button"
+          onClick={handleSpin}
+          disabled={isSpinning}
+        >
+          {isSpinning ? "SPINNING..." : "SPIN £1"}
+        </button>
+
+        {result && (
+          <div className="result">
+            {result.outcome.win ? (
+              <>
+                <strong>WIN</strong>
+                <span>£{(result.payoutInPence / 100).toFixed(2)}</span>
+              </>
+            ) : (
+              <strong>NO WIN</strong>
+            )}
+          </div>
+        )}
+      </div>
     </main>
   );
 }
