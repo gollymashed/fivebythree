@@ -36,11 +36,7 @@ interface ReelProps {
   stopAfterMs: number;
 }
 
-export function Reel({
-  symbol,
-  spinId,
-  stopAfterMs,
-}: ReelProps) {
+export function Reel({ symbol, spinId, stopAfterMs }: ReelProps) {
   const [offset, setOffset] = useState(0);
   const [transition, setTransition] = useState("none");
 
