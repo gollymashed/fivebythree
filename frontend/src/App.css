@@ -47,12 +47,13 @@
 
 .spin-button {
   width: 100%;
-  padding: 16px;
+  margin-top: 20px;
+  padding: 20px;
 
-  border: 0;
-  border-radius: 10px;
+  border: none;
+  border-radius: 12px;
 
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
 
   cursor: pointer;

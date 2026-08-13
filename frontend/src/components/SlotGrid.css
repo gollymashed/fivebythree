@@ -1,0 +1,100 @@
+.slot-grid {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: repeat(3, 120px);
+  grid-template-rows: repeat(3, 120px);
+
+  gap: 10px;
+
+  background: #1f1f1f;
+
+  justify-content: center;
+}
+
+.grid-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 120px;
+  height: 120px;
+
+  box-sizing: border-box;
+
+  background: white;
+  border-radius: 14px;
+
+  font-size: 60px;
+}
+
+
+/* -------------------- */
+/* PAYLINES             */
+/* -------------------- */
+
+.payline {
+  position: absolute;
+
+  left: 0;
+
+  width: 100%;
+  height: 5px;
+
+  z-index: 10;
+
+  pointer-events: none;
+
+  border-radius: 999px;
+
+  transform-origin: center;
+}
+
+
+/* Payline 1 — middle */
+
+.payline.payline-1 {
+  top: 50%;
+
+  background: gold;
+}
+
+
+/* Payline 2 — top */
+
+.payline.payline-2 {
+  top: 60px;
+
+  background: limegreen;
+}
+
+
+/* Payline 3 — bottom */
+
+.payline.payline-3 {
+  bottom: 60px;
+
+  background: dodgerblue;
+}
+
+
+/* Payline 4 — diagonal down */
+
+.payline.payline-4 {
+  top: 50%;
+
+  background: hotpink;
+
+  transform: rotate(45deg);
+}
+
+
+/* Payline 5 — diagonal up */
+
+.payline.payline-5 {
+  top: 50%;
+
+  background: orange;
+
+  transform: rotate(-45deg);
+}
