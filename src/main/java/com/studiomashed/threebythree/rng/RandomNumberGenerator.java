@@ -1,4 +1,4 @@
-package com.studiomashed.threebyone.rng;
+package com.studiomashed.threebythree.rng;
 
 public interface RandomNumberGenerator {
 

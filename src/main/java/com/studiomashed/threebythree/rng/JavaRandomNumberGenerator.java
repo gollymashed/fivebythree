@@ -1,4 +1,4 @@
-package com.studiomashed.threebyone.rng;
+package com.studiomashed.threebythree.rng;
 
 import java.util.random.RandomGenerator;
 

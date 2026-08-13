@@ -1,4 +1,4 @@
-package com.studiomashed.threebyone.model;
+package com.studiomashed.threebythree.model;
 
 public enum Symbol {
     CHERRY,

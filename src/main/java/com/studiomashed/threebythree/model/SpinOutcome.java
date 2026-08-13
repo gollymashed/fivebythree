@@ -1,25 +1,25 @@
-package com.studiomashed.threebyone.model;
+package com.studiomashed.threebythree.model;
 
 import java.util.List;
 
 public record SpinOutcome(
-        List<Symbol> symbols,
-        int payoutMultiplier) {
+        SpinGrid grid,
+        List<Win> wins) {
     public SpinOutcome {
-        symbols = List.copyOf(symbols);
-
-        if (symbols.size() != 3) {
+        if (grid == null) {
             throw new IllegalArgumentException(
-                    "A 3x1 spin must contain exactly 3 symbols");
+                    "Spin grid cannot be null");
         }
 
-        if (payoutMultiplier < 0) {
+        if (wins == null) {
             throw new IllegalArgumentException(
-                    "Payout multiplier cannot be negative");
+                    "Wins cannot be null");
         }
+
+        wins = List.copyOf(wins);
     }
 
     public boolean isWin() {
-        return payoutMultiplier > 0;
+        return !wins.isEmpty();
     }
 }

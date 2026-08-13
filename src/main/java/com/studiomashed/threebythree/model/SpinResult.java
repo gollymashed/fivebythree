@@ -1,11 +1,12 @@
-package com.studiomashed.threebyone.model;
+package com.studiomashed.threebythree.model;
 
 public record SpinResult(
-        long stakeInPence,
+        long stakePerLineInPence,
+        long totalStakeInPence,
         long payoutInPence,
         SpinOutcome outcome) {
     public SpinResult {
-        if (stakeInPence <= 0) {
+        if (stakePerLineInPence <= 0) {
             throw new IllegalArgumentException(
                     "Stake must be positive");
         }

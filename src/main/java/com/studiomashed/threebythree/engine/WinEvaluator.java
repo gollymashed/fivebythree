@@ -1,9 +1,13 @@
-package com.studiomashed.threebyone.engine;
+package com.studiomashed.threebythree.engine;
 
-import com.studiomashed.threebyone.model.Paytable;
-import com.studiomashed.threebyone.model.Symbol;
-
+import java.util.ArrayList;
 import java.util.List;
+
+import com.studiomashed.threebythree.model.Payline;
+import com.studiomashed.threebythree.model.Paytable;
+import com.studiomashed.threebythree.model.SpinGrid;
+import com.studiomashed.threebythree.model.Symbol;
+import com.studiomashed.threebythree.model.Win;
 
 public final class WinEvaluator {
 
@@ -13,10 +17,31 @@ public final class WinEvaluator {
         this.paytable = paytable;
     }
 
-    public int evaluate(List<Symbol> symbols) {
+    public List<Win> evaluate(SpinGrid grid,
+            List<Payline> paylines) {
+
+        List<Win> wins = new ArrayList<>();
+
+        for (Payline payline : paylines) {
+            List<Symbol> symbols = grid.symbolsFor(payline);
+
+            Win win = evaluatePayline(symbols, payline);
+
+            if (win != null) {
+                wins.add(win);
+            }
+        }
+
+        return wins;
+    }
+
+    private Win evaluatePayline(
+            List<Symbol> symbols,
+            Payline payline) {
+
         if (symbols.size() != 3) {
             throw new IllegalArgumentException(
-                    "A 3x1 result must contain exactly 3 symbols");
+                    "A payline must contain exactly 3 symbols");
         }
 
         Symbol targetSymbol = Symbol.WILD;
@@ -37,10 +62,19 @@ public final class WinEvaluator {
             }
         }
 
-        if (!allMatchTarget) {
-            return 0;
+        if (allMatchTarget) {
+            int multiplier = paytable.payoutMultiplierFor(targetSymbol);
+
+            if (multiplier > 0) {
+                Win win = new Win(
+                        payline.id(),
+                        targetSymbol,
+                        multiplier);
+
+                return win;
+            }
         }
 
-        return paytable.payoutMultiplierFor(targetSymbol);
+        return null;
     }
 }

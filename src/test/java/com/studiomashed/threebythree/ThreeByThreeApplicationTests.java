@@ -1,10 +1,10 @@
-package com.studiomashed.threebyone;
+package com.studiomashed.threebythree;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ThreebyoneApplicationTests {
+class ThreeByThreeApplicationTests {
 
 	@Test
 	void contextLoads() {

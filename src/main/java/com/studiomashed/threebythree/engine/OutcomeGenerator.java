@@ -1,11 +1,12 @@
-package com.studiomashed.threebyone.engine;
-
-import com.studiomashed.threebyone.model.Reel;
-import com.studiomashed.threebyone.model.Symbol;
-import com.studiomashed.threebyone.rng.RandomNumberGenerator;
+package com.studiomashed.threebythree.engine;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.studiomashed.threebythree.model.Reel;
+import com.studiomashed.threebythree.model.ReelWindow;
+import com.studiomashed.threebythree.model.SpinGrid;
+import com.studiomashed.threebythree.rng.RandomNumberGenerator;
 
 public final class OutcomeGenerator {
 
@@ -15,19 +16,17 @@ public final class OutcomeGenerator {
         this.rng = rng;
     }
 
-    public List<Symbol> generate(List<Reel> reels) {
-        List<Symbol> symbols = new ArrayList<>();
+    public SpinGrid generate(List<Reel> reels) {
+        List<ReelWindow> windows = new ArrayList<>();
 
         for (Reel reel : reels) {
-            Symbol symbol = selectSymbol(reel);
-            symbols.add(symbol);
+            int position = rng.nextInt(reel.size());
+
+            ReelWindow window = reel.windowAt(position);
+
+            windows.add(window);
         }
 
-        return symbols;
-    }
-
-    private Symbol selectSymbol(Reel reel) {
-        int position = rng.nextInt(reel.size());
-        return reel.symbolAt(position);
+        return new SpinGrid(windows);
     }
 }

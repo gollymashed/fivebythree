@@ -1,20 +1,22 @@
-package com.studiomashed.threebyone.config;
-
-import com.studiomashed.threebyone.engine.OutcomeGenerator;
-import com.studiomashed.threebyone.engine.SlotEngine;
-import com.studiomashed.threebyone.engine.WinEvaluator;
-import com.studiomashed.threebyone.model.Paytable;
-import com.studiomashed.threebyone.model.Reel;
-import com.studiomashed.threebyone.model.Symbol;
-import com.studiomashed.threebyone.rng.JavaRandomNumberGenerator;
-import com.studiomashed.threebyone.rng.RandomNumberGenerator;
-import com.studiomashed.threebyone.simulation.SimulationRunner;
+package com.studiomashed.threebythree.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.studiomashed.threebythree.engine.OutcomeGenerator;
+import com.studiomashed.threebythree.engine.SlotEngine;
+import com.studiomashed.threebythree.engine.WinEvaluator;
+import com.studiomashed.threebythree.model.Payline;
+import com.studiomashed.threebythree.model.Paytable;
+import com.studiomashed.threebythree.model.Reel;
+import com.studiomashed.threebythree.model.Symbol;
+import com.studiomashed.threebythree.rng.JavaRandomNumberGenerator;
+import com.studiomashed.threebythree.rng.RandomNumberGenerator;
+import com.studiomashed.threebythree.simulation.SimulationRunner;
+
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Configuration
 public class GameConfiguration {
@@ -64,8 +66,20 @@ public class GameConfiguration {
                 new Reel(reelStrip),
                 new Reel(reelStrip));
 
+        List<Payline> paylines = List.of(
+                new Payline(1, List.of(1, 1, 1)), // middle
+                new Payline(2, List.of(0, 0, 0)), // top
+                new Payline(3, List.of(2, 2, 2)), // bottom
+                new Payline(4, List.of(0, 1, 2)), // diagonal down
+                new Payline(5, List.of(2, 1, 0)) // diagonal up
+        );
+
+        Set<Integer> validNumberOfPaylines = Set.of(1, 3, 5);
+
         return new SlotEngine(
                 reels,
+                paylines,
+                validNumberOfPaylines,
                 outcomeGenerator,
                 winEvaluator);
     }

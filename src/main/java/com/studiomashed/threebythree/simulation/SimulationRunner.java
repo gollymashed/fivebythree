@@ -1,7 +1,7 @@
-package com.studiomashed.threebyone.simulation;
+package com.studiomashed.threebythree.simulation;
 
-import com.studiomashed.threebyone.engine.SlotEngine;
-import com.studiomashed.threebyone.model.SpinResult;
+import com.studiomashed.threebythree.engine.SlotEngine;
+import com.studiomashed.threebythree.model.SpinResult;
 
 public final class SimulationRunner {
 
@@ -13,15 +13,17 @@ public final class SimulationRunner {
 
     public SimulationResult run(
             long numberOfSpins,
-            long stakeInPence) {
+            long stakePerLineInPence,
+            int numberOfPaylines) {
+
         if (numberOfSpins <= 0) {
             throw new IllegalArgumentException(
                     "Number of spins must be positive");
         }
 
-        if (stakeInPence <= 0) {
+        if (stakePerLineInPence <= 0) {
             throw new IllegalArgumentException(
-                    "Stake must be positive");
+                    "Stake per line must be positive");
         }
 
         long totalStakedInPence = 0;
@@ -30,11 +32,14 @@ public final class SimulationRunner {
         long largestPayoutInPence = 0;
 
         for (long spin = 0; spin < numberOfSpins; spin++) {
-            SpinResult result = slotEngine.spin(stakeInPence);
+
+            SpinResult result = slotEngine.spin(
+                    stakePerLineInPence,
+                    numberOfPaylines);
 
             totalStakedInPence = Math.addExact(
                     totalStakedInPence,
-                    result.stakeInPence());
+                    result.totalStakeInPence());
 
             totalPaidInPence = Math.addExact(
                     totalPaidInPence,
