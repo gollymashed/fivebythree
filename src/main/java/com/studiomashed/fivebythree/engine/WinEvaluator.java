@@ -1,13 +1,13 @@
-package com.studiomashed.threebythree.engine;
+package com.studiomashed.fivebythree.engine;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.studiomashed.threebythree.model.Payline;
-import com.studiomashed.threebythree.model.Paytable;
-import com.studiomashed.threebythree.model.SpinGrid;
-import com.studiomashed.threebythree.model.Symbol;
-import com.studiomashed.threebythree.model.Win;
+import com.studiomashed.fivebythree.model.Payline;
+import com.studiomashed.fivebythree.model.Paytable;
+import com.studiomashed.fivebythree.model.SpinGrid;
+import com.studiomashed.fivebythree.model.Symbol;
+import com.studiomashed.fivebythree.model.Win;
 
 public final class WinEvaluator {
 
@@ -36,17 +36,17 @@ public final class WinEvaluator {
     }
 
     private Win evaluatePayline(
-            List<Symbol> symbols,
+            List<Integer> symbols,
             Payline payline) {
 
-        if (symbols.size() != 3) {
+        if (symbols.size() != 5) {
             throw new IllegalArgumentException(
-                    "A payline must contain exactly 3 symbols");
+                    "A payline must contain exactly 5 symbols");
         }
 
-        Symbol targetSymbol = Symbol.WILD;
+        int targetSymbol = Symbol.WILD;
 
-        for (Symbol symbol : symbols) {
+        for (int symbol : symbols) {
             if (symbol != Symbol.WILD) {
                 targetSymbol = symbol;
                 break;
@@ -55,7 +55,7 @@ public final class WinEvaluator {
 
         boolean allMatchTarget = true;
 
-        for (Symbol symbol : symbols) {
+        for (int symbol : symbols) {
             if (symbol != targetSymbol && symbol != Symbol.WILD) {
                 allMatchTarget = false;
                 break;

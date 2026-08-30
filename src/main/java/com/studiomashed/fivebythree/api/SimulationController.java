@@ -1,11 +1,11 @@
-package com.studiomashed.threebythree.api;
+package com.studiomashed.fivebythree.api;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.studiomashed.threebythree.simulation.SimulationResult;
-import com.studiomashed.threebythree.simulation.SimulationRunner;
+import com.studiomashed.fivebythree.simulation.SimulationResult;
+import com.studiomashed.fivebythree.simulation.SimulationRunner;
 
 @RestController
 public class SimulationController {

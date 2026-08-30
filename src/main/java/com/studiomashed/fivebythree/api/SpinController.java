@@ -1,12 +1,12 @@
-package com.studiomashed.threebythree.api;
+package com.studiomashed.fivebythree.api;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.studiomashed.threebythree.engine.SlotEngine;
-import com.studiomashed.threebythree.model.SpinResult;
+import com.studiomashed.fivebythree.engine.SlotEngine;
+import com.studiomashed.fivebythree.model.SpinResult;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -20,8 +20,8 @@ public class SpinController {
 
     @PostMapping("/spin")
     public SpinResult spin(
-            @RequestParam(defaultValue = "100") long stakePerLineInPence,
-            @RequestParam(defaultValue = "5") int numberOfPaylines) {
+            @RequestParam(defaultValue = "20") long stakePerLineInPence,
+            @RequestParam(defaultValue = "20") int numberOfPaylines) {
         return slotEngine.spin(stakePerLineInPence, numberOfPaylines);
     }
 }

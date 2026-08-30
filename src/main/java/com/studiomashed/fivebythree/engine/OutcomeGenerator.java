@@ -1,12 +1,12 @@
-package com.studiomashed.threebythree.engine;
+package com.studiomashed.fivebythree.engine;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.studiomashed.threebythree.model.Reel;
-import com.studiomashed.threebythree.model.ReelWindow;
-import com.studiomashed.threebythree.model.SpinGrid;
-import com.studiomashed.threebythree.rng.RandomNumberGenerator;
+import com.studiomashed.fivebythree.model.Reel;
+import com.studiomashed.fivebythree.model.ReelWindow;
+import com.studiomashed.fivebythree.model.SpinGrid;
+import com.studiomashed.fivebythree.rng.RandomNumberGenerator;
 
 public final class OutcomeGenerator {
 

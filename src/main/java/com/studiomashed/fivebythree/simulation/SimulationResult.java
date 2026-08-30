@@ -1,4 +1,4 @@
-package com.studiomashed.threebythree.simulation;
+package com.studiomashed.fivebythree.simulation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

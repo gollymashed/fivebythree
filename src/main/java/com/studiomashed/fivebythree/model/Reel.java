@@ -1,8 +1,8 @@
-package com.studiomashed.threebythree.model;
+package com.studiomashed.fivebythree.model;
 
 import java.util.List;
 
-public record Reel(List<Symbol> symbols) {
+public record Reel(List<Integer> symbols) {
 
     public Reel {
         symbols = List.copyOf(symbols);
@@ -12,7 +12,7 @@ public record Reel(List<Symbol> symbols) {
         }
     }
 
-    public Symbol symbolAt(int position) {
+    public int symbolAt(int position) {
         if (position < 0 || position >= size()) {
             throw new IndexOutOfBoundsException(
                     "Reel position out of range: " + position);
@@ -31,7 +31,7 @@ public record Reel(List<Symbol> symbols) {
                     "Reel position out of range: " + position);
         }
 
-        List<Symbol> reelWindow = List.of(
+        List<Integer> reelWindow = List.of(
                 symbols.get(Math.floorMod(position - 1, size())),
                 symbols.get(position),
                 symbols.get((position + 1) % size()));

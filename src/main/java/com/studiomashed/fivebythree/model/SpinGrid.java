@@ -1,4 +1,4 @@
-package com.studiomashed.threebythree.model;
+package com.studiomashed.fivebythree.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,9 @@ public record SpinGrid(List<ReelWindow> reels) {
     public SpinGrid {
         reels = List.copyOf(reels);
 
-        if (reels.size() != 3) {
+        if (reels.size() != 5) {
             throw new IllegalArgumentException(
-                    "A 3x3 grid must contain exactly 3 reels");
+                    "A 5x3 grid must contain exactly 5 reels");
         }
     }
 

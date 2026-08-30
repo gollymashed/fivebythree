@@ -1,4 +1,4 @@
-package com.studiomashed.threebythree.model;
+package com.studiomashed.fivebythree.model;
 
 import java.util.List;
 

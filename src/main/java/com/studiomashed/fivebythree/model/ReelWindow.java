@@ -1,8 +1,8 @@
-package com.studiomashed.threebythree.model;
+package com.studiomashed.fivebythree.model;
 
 import java.util.List;
 
-public record ReelWindow(List<Symbol> symbols) {
+public record ReelWindow(List<Integer> symbols) {
 
     public ReelWindow {
         symbols = List.copyOf(symbols);
@@ -13,7 +13,7 @@ public record ReelWindow(List<Symbol> symbols) {
         }
     }
 
-    public Symbol symbolAt(int row) {
+    public int symbolAt(int row) {
         return symbols.get(row);
     }
 }

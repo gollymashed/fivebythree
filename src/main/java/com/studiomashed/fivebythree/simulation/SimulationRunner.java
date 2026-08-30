@@ -1,7 +1,7 @@
-package com.studiomashed.threebythree.simulation;
+package com.studiomashed.fivebythree.simulation;
 
-import com.studiomashed.threebythree.engine.SlotEngine;
-import com.studiomashed.threebythree.model.SpinResult;
+import com.studiomashed.fivebythree.engine.SlotEngine;
+import com.studiomashed.fivebythree.model.SpinResult;
 
 public final class SimulationRunner {
 

@@ -1,0 +1,213 @@
+package com.studiomashed.fivebythree.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import com.studiomashed.fivebythree.engine.OutcomeGenerator;
+import com.studiomashed.fivebythree.engine.SlotEngine;
+import com.studiomashed.fivebythree.engine.WinEvaluator;
+import com.studiomashed.fivebythree.model.Payline;
+import com.studiomashed.fivebythree.model.Paytable;
+import com.studiomashed.fivebythree.model.Reel;
+import com.studiomashed.fivebythree.model.Symbol;
+import com.studiomashed.fivebythree.rng.JavaRandomNumberGenerator;
+import com.studiomashed.fivebythree.rng.RandomNumberGenerator;
+import com.studiomashed.fivebythree.simulation.SimulationRunner;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+@Configuration
+public class GameConfiguration {
+
+    @Bean
+    public RandomNumberGenerator randomNumberGenerator() {
+        return new JavaRandomNumberGenerator();
+    }
+
+    @Bean
+    public OutcomeGenerator outcomeGenerator(
+            RandomNumberGenerator rng) {
+        return new OutcomeGenerator(rng);
+    }
+
+    @Bean
+    public Paytable paytable() {
+        int[][] payouts = {
+                {0, 0, 0, 1, 2, 3},     // LP1
+                {0, 0, 0, 1, 3, 5},     // LP2
+                {0, 0, 0, 2, 4, 8},     // LP3
+                {0, 0, 0, 3, 6, 12},    // MP1
+                {0, 0, 0, 4, 8, 16},    // MP2
+                {0, 0, 0, 5, 10, 20},   // MP3
+                {0, 0, 0, 10, 25, 50},  // HP1
+                {0, 0, 0, 15, 40, 75},  // HP2
+                {0, 0, 0, 20, 50, 100}  // HP3
+        };
+
+        return new Paytable(payouts);
+    }
+
+    @Bean
+    public WinEvaluator winEvaluator(Paytable paytable) {
+        return new WinEvaluator(paytable);
+    }
+
+    @Bean
+    public SlotEngine slotEngine(
+            OutcomeGenerator outcomeGenerator,
+            WinEvaluator winEvaluator) {
+        List<Integer> reel1 = List.of(
+                Symbol.LP1,
+                Symbol.MP1,
+                Symbol.LP2,
+                Symbol.HP1,
+                Symbol.LP3,
+                Symbol.MP2,
+                Symbol.LP1,
+                Symbol.HP1,
+                Symbol.LP2,
+                Symbol.WILD,
+                Symbol.MP1,
+                Symbol.LP3,
+                Symbol.HP1,
+                Symbol.LP1,
+                Symbol.MP2,
+                Symbol.LP2,
+                Symbol.SCATTER,
+                Symbol.LP3
+        );
+
+        List<Integer> reel2 = List.of(
+                Symbol.LP1,
+                Symbol.MP1,
+                Symbol.LP2,
+                Symbol.HP1,
+                Symbol.LP3,
+                Symbol.MP2,
+                Symbol.LP1,
+                Symbol.HP1,
+                Symbol.LP2,
+                Symbol.WILD,
+                Symbol.MP1,
+                Symbol.LP3,
+                Symbol.LP1,
+                Symbol.MP2,
+                Symbol.LP2,
+                Symbol.SCATTER,
+                Symbol.LP3,
+                Symbol.HP1
+        );
+
+        List<Integer> reel3 = List.of(
+                Symbol.LP1,
+                Symbol.MP1,
+                Symbol.LP2,
+                Symbol.LP3,
+                Symbol.MP2,
+                Symbol.LP1,
+                Symbol.HP1,
+                Symbol.LP2,
+                Symbol.WILD,
+                Symbol.MP1,
+                Symbol.LP3,
+                Symbol.LP1,
+                Symbol.MP2,
+                Symbol.LP2,
+                Symbol.SCATTER,
+                Symbol.LP3,
+                Symbol.HP1,
+                Symbol.LP1
+        );
+
+        List<Integer> reel4 = List.of(
+                Symbol.LP1,
+                Symbol.MP1,
+                Symbol.LP2,
+                Symbol.LP3,
+                Symbol.MP2,
+                Symbol.LP1,
+                Symbol.LP2,
+                Symbol.HP1,
+                Symbol.LP3,
+                Symbol.WILD,
+                Symbol.MP1,
+                Symbol.LP1,
+                Symbol.LP2,
+                Symbol.SCATTER,
+                Symbol.LP3,
+                Symbol.MP2,
+                Symbol.LP1,
+                Symbol.LP2
+        );
+
+        List<Integer> reel5 = List.of(
+                Symbol.LP1,
+                Symbol.MP1,
+                Symbol.LP2,
+                Symbol.LP3,
+                Symbol.MP2,
+                Symbol.LP1,
+                Symbol.LP2,
+                Symbol.LP3,
+                Symbol.WILD,
+                Symbol.MP1,
+                Symbol.LP1,
+                Symbol.LP2,
+                Symbol.SCATTER,
+                Symbol.LP3,
+                Symbol.MP2,
+                Symbol.LP1,
+                Symbol.LP2,
+                Symbol.LP3
+        );
+
+        List<Reel> reels = List.of(
+                new Reel(reel1),
+                new Reel(reel2),
+                new Reel(reel3),
+                new Reel(reel4),
+                new Reel(reel5)
+        );
+
+        List<Payline> paylines = List.of(
+                new Payline(1, List.of(1, 1, 1, 1, 1)),
+                new Payline(2, List.of(0, 0, 0, 0, 0)),
+                new Payline(3, List.of(2, 2, 2, 2, 2)),
+                new Payline(4, List.of(0, 1, 2, 1, 0)),
+                new Payline(5, List.of(2, 1, 0, 1, 2)),
+                new Payline(6, List.of(1, 0, 1, 0, 1)),
+                new Payline(7, List.of(1, 2, 1, 2, 1)),
+                new Payline(8, List.of(0, 0, 1, 2, 2)),
+                new Payline(9, List.of(2, 2, 1, 0, 0)),
+                new Payline(10, List.of(1, 2, 1, 0, 1)),
+                new Payline(11, List.of(1, 0, 1, 2, 1)),
+                new Payline(12, List.of(0, 1, 1, 1, 0)),
+                new Payline(13, List.of(2, 1, 1, 1, 2)),
+                new Payline(14, List.of(0, 1, 0, 1, 0)),
+                new Payline(15, List.of(2, 1, 2, 1, 2)),
+                new Payline(16, List.of(1, 1, 0, 1, 1)),
+                new Payline(17, List.of(1, 1, 2, 1, 1)),
+                new Payline(18, List.of(0, 0, 2, 0, 0)),
+                new Payline(19, List.of(2, 2, 0, 2, 2)),
+                new Payline(20, List.of(0, 2, 2, 2, 0))
+
+        );
+
+        Set<Integer> validNumberOfPaylines = Set.of(1, 3, 5, 20);
+
+        return new SlotEngine(
+                reels,
+                paylines,
+                validNumberOfPaylines,
+                outcomeGenerator,
+                winEvaluator);
+    }
+
+    @Bean
+    public SimulationRunner simulationRunner(
+            SlotEngine slotEngine) {
+        return new SimulationRunner(slotEngine);
+    }
+}

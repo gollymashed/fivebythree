@@ -1,14 +1,14 @@
-package com.studiomashed.threebythree.engine;
+package com.studiomashed.fivebythree.engine;
 
 import java.util.List;
 import java.util.Set;
 
-import com.studiomashed.threebythree.model.Payline;
-import com.studiomashed.threebythree.model.Reel;
-import com.studiomashed.threebythree.model.SpinGrid;
-import com.studiomashed.threebythree.model.SpinOutcome;
-import com.studiomashed.threebythree.model.SpinResult;
-import com.studiomashed.threebythree.model.Win;
+import com.studiomashed.fivebythree.model.Payline;
+import com.studiomashed.fivebythree.model.Reel;
+import com.studiomashed.fivebythree.model.SpinGrid;
+import com.studiomashed.fivebythree.model.SpinOutcome;
+import com.studiomashed.fivebythree.model.SpinResult;
+import com.studiomashed.fivebythree.model.Win;
 
 public final class SlotEngine {
 
@@ -24,9 +24,9 @@ public final class SlotEngine {
             Set<Integer> validNumberOfPaylines,
             OutcomeGenerator outcomeGenerator,
             WinEvaluator winEvaluator) {
-        if (reels.size() != 3) {
+        if (reels.size() != 5) {
             throw new IllegalArgumentException(
-                    "A 3x3 slot must contain exactly 3 reels");
+                    "A 5x3 slot must contain exactly 5 reels");
         }
 
         this.reels = List.copyOf(reels);

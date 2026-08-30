@@ -1,4 +1,4 @@
-package com.studiomashed.threebythree.model;
+package com.studiomashed.fivebythree.model;
 
 import java.util.List;
 
@@ -8,15 +8,15 @@ public record Payline(
     public Payline {
         rows = List.copyOf(rows);
 
-        if (rows.size() != 3) {
+        if (rows.size() != 5) {
             throw new IllegalArgumentException(
-                    "A 3x3 payline must contain exactly 3 rows");
+                    "A 5x3 payline must contain exactly 5 rows");
         }
 
         for (int row : rows) {
-            if (row < 0 || row > 2) {
+            if (row < 0 || row > 4) {
                 throw new IllegalArgumentException(
-                        "Payline rows must be between 0 and 2");
+                        "Payline rows must be between 0 and 4");
             }
         }
     }
