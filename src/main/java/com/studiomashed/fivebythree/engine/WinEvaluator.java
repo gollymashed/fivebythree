@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.studiomashed.fivebythree.model.Payline;
-import com.studiomashed.fivebythree.model.Paytable;
+import com.studiomashed.fivebythree.model.PaylinePaytable;
 import com.studiomashed.fivebythree.model.SpinGrid;
 import com.studiomashed.fivebythree.model.Symbol;
 import com.studiomashed.fivebythree.model.Win;
 
 public final class WinEvaluator {
 
-    private final Paytable paytable;
+    private final PaylinePaytable paylinePaytable;
 
-    public WinEvaluator(Paytable paytable) {
-        this.paytable = paytable;
+    public WinEvaluator(PaylinePaytable paylinePaytable) {
+        this.paylinePaytable = paylinePaytable;
     }
 
     public List<Win> evaluate(SpinGrid grid,
-            List<Payline> paylines) {
+                              List<Payline> paylines) {
 
         List<Win> wins = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public final class WinEvaluator {
     }
 
     private Win evaluatePayline(
-            List<Integer> symbols,
+            List<Symbol> symbols,
             Payline payline) {
 
         if (symbols.size() != 5) {
@@ -44,36 +44,34 @@ public final class WinEvaluator {
                     "A payline must contain exactly 5 symbols");
         }
 
-        int targetSymbol = Symbol.WILD;
+        Symbol targetSymbol = Symbol.WILD;
 
-        for (int symbol : symbols) {
+        for (Symbol symbol : symbols) {
             if (symbol != Symbol.WILD) {
                 targetSymbol = symbol;
                 break;
             }
         }
 
-        boolean allMatchTarget = true;
+        int matchCount = 0;
 
-        for (int symbol : symbols) {
-            if (symbol != targetSymbol && symbol != Symbol.WILD) {
-                allMatchTarget = false;
+        for (Symbol symbol : symbols) {
+            if (symbol == targetSymbol || symbol == Symbol.WILD) {
+                matchCount++;
+            } else {
                 break;
             }
         }
 
-        if (allMatchTarget) {
-            int multiplier = paytable.payoutMultiplierFor(targetSymbol);
+        int multiplier = paylinePaytable.payoutMultiplierFor(targetSymbol, matchCount);
 
-            if (multiplier > 0) {
-                Win win = new Win(
-                        payline.id(),
-                        targetSymbol,
-                        multiplier);
-
-                return win;
-            }
+        if (multiplier > 0) {
+            return new Win(
+                    payline.id(),
+                    targetSymbol,
+                    multiplier);
         }
+
 
         return null;
     }

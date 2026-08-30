@@ -4,7 +4,8 @@ import java.util.List;
 
 public record SpinOutcome(
         SpinGrid grid,
-        List<Win> wins) {
+        List<Win> wins,
+        ScatterResult scatterResult) {
     public SpinOutcome {
         if (grid == null) {
             throw new IllegalArgumentException(
@@ -16,10 +17,15 @@ public record SpinOutcome(
                     "Wins cannot be null");
         }
 
+        if (scatterResult == null) {
+            throw new IllegalArgumentException(
+                    "Scatter result cannot be null");
+        }
+
         wins = List.copyOf(wins);
     }
 
     public boolean isWin() {
-        return !wins.isEmpty();
+        return !wins.isEmpty() || scatterResult.payoutMultiplier() > 0;
     }
 }

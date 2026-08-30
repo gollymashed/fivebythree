@@ -1,15 +1,13 @@
 package com.studiomashed.fivebythree.config;
 
+import com.studiomashed.fivebythree.engine.ScatterEvaluator;
+import com.studiomashed.fivebythree.model.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.studiomashed.fivebythree.engine.OutcomeGenerator;
 import com.studiomashed.fivebythree.engine.SlotEngine;
 import com.studiomashed.fivebythree.engine.WinEvaluator;
-import com.studiomashed.fivebythree.model.Payline;
-import com.studiomashed.fivebythree.model.Paytable;
-import com.studiomashed.fivebythree.model.Reel;
-import com.studiomashed.fivebythree.model.Symbol;
 import com.studiomashed.fivebythree.rng.JavaRandomNumberGenerator;
 import com.studiomashed.fivebythree.rng.RandomNumberGenerator;
 import com.studiomashed.fivebythree.simulation.SimulationRunner;
@@ -33,32 +31,50 @@ public class GameConfiguration {
     }
 
     @Bean
-    public Paytable paytable() {
-        int[][] payouts = {
-                {0, 0, 0, 1, 2, 3},     // LP1
-                {0, 0, 0, 1, 3, 5},     // LP2
-                {0, 0, 0, 2, 4, 8},     // LP3
-                {0, 0, 0, 3, 6, 12},    // MP1
-                {0, 0, 0, 4, 8, 16},    // MP2
-                {0, 0, 0, 5, 10, 20},   // MP3
-                {0, 0, 0, 10, 25, 50},  // HP1
-                {0, 0, 0, 15, 40, 75},  // HP2
-                {0, 0, 0, 20, 50, 100}  // HP3
-        };
+    public PaylinePaytable paylinePaytable() {
+        Map<Symbol, int[]> payouts = Map.of(
+                Symbol.LP1, new int[]{0, 0, 0, 1, 2, 3},
+                Symbol.LP2, new int[]{0, 0, 0, 1, 3, 5},
+                Symbol.LP3, new int[]{0, 0, 0, 2, 4, 8},
+                Symbol.MP1, new int[]{0, 0, 0, 3, 6, 12},
+                Symbol.MP2, new int[]{0, 0, 0, 4, 8, 16},
+                Symbol.HP1, new int[]{0, 0, 0, 10, 25, 50});
 
-        return new Paytable(payouts);
+        return new PaylinePaytable(payouts);
     }
 
     @Bean
-    public WinEvaluator winEvaluator(Paytable paytable) {
-        return new WinEvaluator(paytable);
+    public WinEvaluator winEvaluator(PaylinePaytable paylinePaytable) {
+        return new WinEvaluator(paylinePaytable);
+    }
+
+    @Bean
+    public ScatterPaytable scatterPaytable() {
+        int[] payoutMultipliers = {
+                0, 0, 0, 2, 10, 50
+        };
+
+        int[] freeSpins = {
+                0, 0, 0, 5, 10, 15
+        };
+
+        return new ScatterPaytable(
+                payoutMultipliers,
+                freeSpins
+        );
+    }
+
+    @Bean
+    public ScatterEvaluator scatterEvaluator(ScatterPaytable scatterPaytable) {
+        return new ScatterEvaluator(scatterPaytable);
     }
 
     @Bean
     public SlotEngine slotEngine(
             OutcomeGenerator outcomeGenerator,
-            WinEvaluator winEvaluator) {
-        List<Integer> reel1 = List.of(
+            WinEvaluator winEvaluator,
+            ScatterEvaluator scatterEvaluator) {
+        List<Symbol> reel1 = List.of(
                 Symbol.LP1,
                 Symbol.MP1,
                 Symbol.LP2,
@@ -76,10 +92,9 @@ public class GameConfiguration {
                 Symbol.MP2,
                 Symbol.LP2,
                 Symbol.SCATTER,
-                Symbol.LP3
-        );
+                Symbol.LP3);
 
-        List<Integer> reel2 = List.of(
+        List<Symbol> reel2 = List.of(
                 Symbol.LP1,
                 Symbol.MP1,
                 Symbol.LP2,
@@ -97,10 +112,9 @@ public class GameConfiguration {
                 Symbol.LP2,
                 Symbol.SCATTER,
                 Symbol.LP3,
-                Symbol.HP1
-        );
+                Symbol.HP1);
 
-        List<Integer> reel3 = List.of(
+        List<Symbol> reel3 = List.of(
                 Symbol.LP1,
                 Symbol.MP1,
                 Symbol.LP2,
@@ -118,10 +132,9 @@ public class GameConfiguration {
                 Symbol.SCATTER,
                 Symbol.LP3,
                 Symbol.HP1,
-                Symbol.LP1
-        );
+                Symbol.LP1);
 
-        List<Integer> reel4 = List.of(
+        List<Symbol> reel4 = List.of(
                 Symbol.LP1,
                 Symbol.MP1,
                 Symbol.LP2,
@@ -139,10 +152,9 @@ public class GameConfiguration {
                 Symbol.LP3,
                 Symbol.MP2,
                 Symbol.LP1,
-                Symbol.LP2
-        );
+                Symbol.LP2);
 
-        List<Integer> reel5 = List.of(
+        List<Symbol> reel5 = List.of(
                 Symbol.LP1,
                 Symbol.MP1,
                 Symbol.LP2,
@@ -160,16 +172,14 @@ public class GameConfiguration {
                 Symbol.MP2,
                 Symbol.LP1,
                 Symbol.LP2,
-                Symbol.LP3
-        );
+                Symbol.LP3);
 
         List<Reel> reels = List.of(
                 new Reel(reel1),
                 new Reel(reel2),
                 new Reel(reel3),
                 new Reel(reel4),
-                new Reel(reel5)
-        );
+                new Reel(reel5));
 
         List<Payline> paylines = List.of(
                 new Payline(1, List.of(1, 1, 1, 1, 1)),
@@ -202,7 +212,8 @@ public class GameConfiguration {
                 paylines,
                 validNumberOfPaylines,
                 outcomeGenerator,
-                winEvaluator);
+                winEvaluator,
+                scatterEvaluator);
     }
 
     @Bean
