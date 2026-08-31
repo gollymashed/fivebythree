@@ -33,12 +33,15 @@ public class GameConfiguration {
     @Bean
     public PaylinePaytable paylinePaytable() {
         Map<Symbol, int[]> payouts = Map.of(
-                Symbol.LP1, new int[]{0, 0, 0, 1, 2, 3},
-                Symbol.LP2, new int[]{0, 0, 0, 1, 3, 5},
-                Symbol.LP3, new int[]{0, 0, 0, 2, 4, 8},
-                Symbol.MP1, new int[]{0, 0, 0, 3, 6, 12},
-                Symbol.MP2, new int[]{0, 0, 0, 4, 8, 16},
-                Symbol.HP1, new int[]{0, 0, 0, 10, 25, 50});
+                Symbol.LP1, new int[]{0, 0, 0, 4, 8, 12},
+                Symbol.LP2, new int[]{0, 0, 0, 4, 8, 12},
+                Symbol.LP3, new int[]{0, 0, 0, 4, 8, 12},
+                Symbol.LP4, new int[]{0, 0, 0, 4, 8, 12},
+                Symbol.MP1, new int[]{0, 0, 0, 8, 24, 48},
+                Symbol.MP2, new int[]{0, 0, 0, 8, 24, 48},
+                Symbol.MP3, new int[]{0, 0, 0, 8, 24, 48},
+                Symbol.HP1, new int[]{0, 0, 0, 48, 120, 500},
+                Symbol.WILD, new int[]{0, 0, 0, 84, 1000, 12000});
 
         return new PaylinePaytable(payouts);
     }
@@ -51,11 +54,11 @@ public class GameConfiguration {
     @Bean
     public ScatterPaytable scatterPaytable() {
         int[] payoutMultipliers = {
-                0, 0, 0, 2, 10, 50
+                0, 0, 0, 2, 10, 100
         };
 
         int[] freeSpins = {
-                0, 0, 0, 5, 10, 15
+                0, 0, 0, 1, 10, 25
         };
 
         return new ScatterPaytable(
@@ -79,99 +82,99 @@ public class GameConfiguration {
                 Symbol.MP1,
                 Symbol.LP2,
                 Symbol.HP1,
-                Symbol.LP3,
                 Symbol.MP2,
-                Symbol.LP1,
-                Symbol.HP1,
-                Symbol.LP2,
+                Symbol.LP3,
                 Symbol.WILD,
-                Symbol.MP1,
-                Symbol.LP3,
+                Symbol.LP4,
                 Symbol.HP1,
+                Symbol.MP3,
                 Symbol.LP1,
+                Symbol.MP1,
                 Symbol.MP2,
+                Symbol.HP1,
                 Symbol.LP2,
+                Symbol.LP3,
                 Symbol.SCATTER,
-                Symbol.LP3);
+                Symbol.LP4);
 
         List<Symbol> reel2 = List.of(
-                Symbol.LP1,
-                Symbol.MP1,
                 Symbol.LP2,
+                Symbol.MP3,
+                Symbol.LP4,
                 Symbol.HP1,
-                Symbol.LP3,
                 Symbol.MP2,
                 Symbol.LP1,
+                Symbol.MP1,
+                Symbol.LP3,
                 Symbol.HP1,
+                Symbol.MP1,
                 Symbol.LP2,
                 Symbol.WILD,
-                Symbol.MP1,
-                Symbol.LP3,
+                Symbol.MP3,
+                Symbol.LP4,
+                Symbol.HP1,
                 Symbol.LP1,
-                Symbol.MP2,
-                Symbol.LP2,
                 Symbol.SCATTER,
-                Symbol.LP3,
-                Symbol.HP1);
+                Symbol.LP3);
 
         List<Symbol> reel3 = List.of(
                 Symbol.LP1,
                 Symbol.MP1,
-                Symbol.LP2,
-                Symbol.LP3,
-                Symbol.MP2,
-                Symbol.LP1,
+                Symbol.LP4,
                 Symbol.HP1,
+                Symbol.MP3,
                 Symbol.LP2,
                 Symbol.WILD,
+                Symbol.LP3,
+                Symbol.MP2,
+                Symbol.LP1,
+                Symbol.MP3,
+                Symbol.LP4,
+                Symbol.HP1,
+                Symbol.LP2,
                 Symbol.MP1,
                 Symbol.LP3,
-                Symbol.LP1,
-                Symbol.MP2,
-                Symbol.LP2,
                 Symbol.SCATTER,
-                Symbol.LP3,
-                Symbol.HP1,
-                Symbol.LP1);
+                Symbol.LP4);
 
         List<Symbol> reel4 = List.of(
-                Symbol.LP1,
+                Symbol.LP2,
                 Symbol.MP1,
-                Symbol.LP2,
-                Symbol.LP3,
-                Symbol.MP2,
+                Symbol.LP4,
+                Symbol.MP3,
                 Symbol.LP1,
-                Symbol.LP2,
-                Symbol.HP1,
-                Symbol.LP3,
                 Symbol.WILD,
-                Symbol.MP1,
+                Symbol.LP3,
+                Symbol.HP1,
+                Symbol.LP2,
+                Symbol.LP4,
                 Symbol.LP1,
+                Symbol.MP2,
+                Symbol.LP3,
+                Symbol.LP4,
+                Symbol.MP3,
                 Symbol.LP2,
                 Symbol.SCATTER,
-                Symbol.LP3,
-                Symbol.MP2,
-                Symbol.LP1,
-                Symbol.LP2);
+                Symbol.LP1);
 
         List<Symbol> reel5 = List.of(
                 Symbol.LP1,
-                Symbol.MP1,
+                Symbol.MP3,
+                Symbol.LP4,
                 Symbol.LP2,
                 Symbol.LP3,
                 Symbol.MP2,
                 Symbol.LP1,
-                Symbol.LP2,
-                Symbol.LP3,
+                Symbol.MP1,
+                Symbol.LP4,
                 Symbol.WILD,
-                Symbol.MP1,
-                Symbol.LP1,
                 Symbol.LP2,
-                Symbol.SCATTER,
                 Symbol.LP3,
-                Symbol.MP2,
+                Symbol.LP4,
+                Symbol.HP1,
+                Symbol.MP3,
                 Symbol.LP1,
-                Symbol.LP2,
+                Symbol.SCATTER,
                 Symbol.LP3);
 
         List<Reel> reels = List.of(
@@ -210,7 +213,6 @@ public class GameConfiguration {
         return new SlotEngine(
                 reels,
                 paylines,
-                validNumberOfPaylines,
                 outcomeGenerator,
                 winEvaluator,
                 scatterEvaluator);

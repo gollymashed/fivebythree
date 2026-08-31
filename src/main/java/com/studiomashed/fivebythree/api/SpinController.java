@@ -1,5 +1,6 @@
 package com.studiomashed.fivebythree.api;
 
+import com.studiomashed.fivebythree.model.GameState;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,11 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.studiomashed.fivebythree.engine.SlotEngine;
 import com.studiomashed.fivebythree.model.SpinResult;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 public class SpinController {
 
     private final SlotEngine slotEngine;
+    private final Map<String, GameState> gameStates = new ConcurrentHashMap<>();
 
     public SpinController(SlotEngine slotEngine) {
         this.slotEngine = slotEngine;
@@ -20,8 +25,14 @@ public class SpinController {
 
     @PostMapping("/spin")
     public SpinResult spin(
-            @RequestParam(defaultValue = "20") long stakePerLineInPence,
-            @RequestParam(defaultValue = "20") int numberOfPaylines) {
-        return slotEngine.spin(stakePerLineInPence, numberOfPaylines);
+            @RequestParam String playerId,
+            @RequestParam(defaultValue = "100") long stakeInPence) {
+
+        GameState gameState = gameStates.computeIfAbsent(
+                playerId,
+                id -> new GameState()
+        );
+
+        return slotEngine.spin(stakeInPence, gameState);
     }
 }

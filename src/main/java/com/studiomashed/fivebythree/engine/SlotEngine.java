@@ -9,7 +9,6 @@ public final class SlotEngine {
 
     private final List<Reel> reels;
     private final List<Payline> paylines;
-    private final Set<Integer> validNumberOfPaylines;
     private final OutcomeGenerator outcomeGenerator;
     private final WinEvaluator winEvaluator;
     private final ScatterEvaluator scatterEvaluator;
@@ -17,7 +16,6 @@ public final class SlotEngine {
     public SlotEngine(
             List<Reel> reels,
             List<Payline> paylines,
-            Set<Integer> validNumberOfPaylines,
             OutcomeGenerator outcomeGenerator,
             WinEvaluator winEvaluator,
             ScatterEvaluator scatterEvaluator) {
@@ -28,44 +26,58 @@ public final class SlotEngine {
 
         this.reels = List.copyOf(reels);
         this.paylines = List.copyOf(paylines);
-        this.validNumberOfPaylines = Set.copyOf(validNumberOfPaylines);
         this.outcomeGenerator = outcomeGenerator;
         this.winEvaluator = winEvaluator;
         this.scatterEvaluator = scatterEvaluator;
     }
 
-    public SpinResult spin(long stakePerLineInPence, int numberOfPaylines) {
-        if (stakePerLineInPence <= 0) {
+    public SpinResult spin(long requestedBetInPence, GameState gameState) {
+
+        boolean isFreeSpin = gameState.hasFreeSpins();
+
+        long totalBetInPence = isFreeSpin ? gameState.freeSpinBetInPence() : requestedBetInPence;
+
+        if (totalBetInPence <= 0) {
             throw new IllegalArgumentException(
                     "Stake must be positive");
         }
 
-        if (!validNumberOfPaylines.contains(numberOfPaylines)) {
+        if (totalBetInPence % paylines.size() != 0) {
             throw new IllegalArgumentException(
-                    "Invalid number of paylines");
+                    "Bet must be divisible by number of paylines");
         }
 
-        List<Payline> activePaylines = paylines.subList(0, numberOfPaylines);
+        long amountChargedInPence = isFreeSpin
+                ? 0
+                : totalBetInPence;
 
-        long totalStakeInPence = Math.multiplyExact(stakePerLineInPence, activePaylines.size());
+        if (isFreeSpin) {
+            gameState.consumeFreeSpin();
+        }
 
         SpinGrid grid = outcomeGenerator.generate(reels);
 
-        List<Win> wins = winEvaluator.evaluate(grid, activePaylines);
+        List<Win> wins = winEvaluator.evaluate(grid, paylines);
 
-        long payoutInPence = 0;
+        int multiplier = 0;
 
         for (Win win : wins) {
-            long linePayout = Math.multiplyExact(
-                    stakePerLineInPence,
-                    win.payoutMultiplier());
-
-            payoutInPence = Math.addExact(
-                    payoutInPence,
-                    linePayout);
+            multiplier += win.payoutMultiplier();
         }
 
+        long paylinesPayout = totalBetInPence * multiplier / paylines.size();
+
         ScatterResult scatterResult = scatterEvaluator.evaluate(grid);
+
+        long scatterPayout = totalBetInPence * scatterResult.payoutMultiplier();
+
+        if (scatterResult.freeSpins() > 0) {
+            gameState.awardFreeSpins(
+                    scatterResult.freeSpins(),
+                    totalBetInPence);
+        }
+
+        long totalPayoutInPence = scatterPayout + paylinesPayout;
 
         SpinOutcome outcome = new SpinOutcome(
                 grid,
@@ -73,9 +85,9 @@ public final class SlotEngine {
                 scatterResult);
 
         return new SpinResult(
-                stakePerLineInPence,
-                totalStakeInPence,
-                payoutInPence,
+                amountChargedInPence,
+                totalBetInPence,
+                totalPayoutInPence,
                 outcome);
     }
 }

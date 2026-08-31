@@ -20,12 +20,10 @@ public class SimulationController {
     @PostMapping("/simulate")
     public SimulationResult simulate(
             @RequestParam(defaultValue = "1000000") long spins,
-            @RequestParam(defaultValue = "20") long stakePerLineInPence,
-            @RequestParam(defaultValue = "5") int numberOfPaylines) {
+            @RequestParam(defaultValue = "100") long betInPence) {
 
         return simulationRunner.run(
                 spins,
-                stakePerLineInPence,
-                numberOfPaylines);
+                betInPence);
     }
 }

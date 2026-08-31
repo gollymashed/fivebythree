@@ -14,6 +14,12 @@ public final class PaylinePaytable {
             Symbol symbol,
             int matchCount) {
 
-        return payouts.get(symbol)[matchCount];
+        int[] multipliers = payouts.get(symbol);
+
+        if (multipliers == null) {
+            return 0;
+        }
+
+        return multipliers[matchCount];
     }
 }
