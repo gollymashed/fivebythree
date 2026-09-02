@@ -14,7 +14,6 @@ import com.studiomashed.fivebythree.simulation.SimulationRunner;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Configuration
 public class GameConfiguration {
@@ -209,8 +208,6 @@ public class GameConfiguration {
                 new Payline(20, List.of(0, 2, 2, 2, 0))
 
         );
-
-        Set<Integer> validNumberOfPaylines = Set.of(1, 3, 5, 20);
 
         return new SlotEngine(
                 reels,

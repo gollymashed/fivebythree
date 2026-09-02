@@ -1,106 +1,54 @@
 #root {
-  width: 100%;
-}
-
-.page {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #161616;
-  font-family: Arial, sans-serif;
 }
 
-.machine {
-  position: relative;
-  background: #292929;
-  padding: 40px;
-  border-radius: 20px;
-  text-align: center;
+.app {
+  min-height: 100vh;
 }
 
-.machine h1 {
-  margin-top: 0;
-  font-size: 48px;
-  color: white;
-}
-
-.reels {
-  display: flex;
-  gap: 10px;
-  margin: 30px 0;
-}
-
-.reel {
-  width: 120px;
-  height: 140px;
+.app-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
 
   display: flex;
   align-items: center;
-  justify-content: center;
-
-  background: grey;
-  border-radius: 10px;
-
-  font-size: 70px;
-}
-
-.spin-button {
-  width: 100%;
-  margin-top: 20px;
-  padding: 20px;
-
-  border: none;
-  border-radius: 12px;
-
-  font-size: 24px;
-  font-weight: bold;
-
-  cursor: pointer;
-}
-
-.spin-button:disabled {
-  cursor: default;
-  opacity: 0.5;
-}
-
-.result {
-  margin-top: 24px;
-  display: flex;
-  justify-content: space-between;
-  color: white;
-  font-size: 20px;
-}
-
-.balance {
-  margin-bottom: 20px;
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.stake-selector {
-  display: flex;
   gap: 8px;
-  margin-bottom: 12px;
+
+  min-height: 64px;
+  padding: 0 24px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
 }
 
-.stake-button {
-  flex: 1;
-  padding: 10px;
+.app-nav button {
+  padding: 8px 14px;
 
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
 
+  background: transparent;
+  color: inherit;
+
+  font: inherit;
+  font-weight: 600;
+
   cursor: pointer;
-  font-weight: bold;
 }
 
-.stake-button.selected {
-  outline: 3px solid white;
+.app-nav button:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.stake-button:disabled {
-  cursor: default;
-  opacity: 0.5;
+.app-nav button.active {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+@media (max-width: 600px) {
+  .app-nav {
+    padding: 0 16px;
+  }
 }
