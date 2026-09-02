@@ -1,8 +1,8 @@
 package com.studiomashed.fivebythree.engine;
 
 import java.util.List;
-import java.util.Set;
 
+import com.studiomashed.fivebythree.config.GameConfiguration;
 import com.studiomashed.fivebythree.model.*;
 
 public final class SlotEngine {
@@ -31,25 +31,25 @@ public final class SlotEngine {
         this.scatterEvaluator = scatterEvaluator;
     }
 
-    public SpinResult spin(long requestedBetInPence, GameState gameState) {
+    public SpinResult spin(long requestedBetInCoins, GameState gameState) {
 
         boolean isFreeSpin = gameState.hasFreeSpins();
 
-        long totalBetInPence = isFreeSpin ? gameState.freeSpinBetInPence() : requestedBetInPence;
+        long totalBetInCoins = isFreeSpin ? gameState.freeSpinBetInPence() : requestedBetInCoins;
 
-        if (totalBetInPence <= 0) {
+        if (totalBetInCoins <= 0) {
             throw new IllegalArgumentException(
                     "Stake must be positive");
         }
 
-        if (totalBetInPence % paylines.size() != 0) {
+        if (totalBetInCoins % paylines.size() != 0) {
             throw new IllegalArgumentException(
                     "Bet must be divisible by number of paylines");
         }
 
         long amountChargedInPence = isFreeSpin
                 ? 0
-                : totalBetInPence;
+                : totalBetInCoins;
 
         if (isFreeSpin) {
             gameState.consumeFreeSpin();
@@ -59,25 +59,27 @@ public final class SlotEngine {
 
         List<Win> wins = winEvaluator.evaluate(grid, paylines);
 
-        int multiplier = 0;
+        int paytablePayoutInCoins = 0;
 
         for (Win win : wins) {
-            multiplier += win.payoutMultiplier();
+            paytablePayoutInCoins += win.payoutCoins();
         }
 
-        long paylinesPayout = totalBetInPence * multiplier / paylines.size();
+        long paylinesPayout = totalBetInCoins
+                * paytablePayoutInCoins
+                / GameConfiguration.COINS_PER_BET;
 
         ScatterResult scatterResult = scatterEvaluator.evaluate(grid);
 
-        long scatterPayout = totalBetInPence * scatterResult.payoutMultiplier();
+        long scatterPayout = totalBetInCoins * scatterResult.payoutMultiplier();
 
         if (scatterResult.freeSpins() > 0) {
             gameState.awardFreeSpins(
                     scatterResult.freeSpins(),
-                    totalBetInPence);
+                    totalBetInCoins);
         }
 
-        long totalPayoutInPence = scatterPayout + paylinesPayout;
+        long totalPayoutInCoins = scatterPayout + paylinesPayout;
 
         SpinOutcome outcome = new SpinOutcome(
                 grid,
@@ -86,8 +88,8 @@ public final class SlotEngine {
 
         return new SpinResult(
                 amountChargedInPence,
-                totalBetInPence,
-                totalPayoutInPence,
+                totalBetInCoins,
+                totalPayoutInCoins,
                 outcome);
     }
 }

@@ -4,6 +4,9 @@ import com.studiomashed.fivebythree.engine.SlotEngine;
 import com.studiomashed.fivebythree.model.GameState;
 import com.studiomashed.fivebythree.model.SpinResult;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 public final class SimulationRunner {
 
     private final SlotEngine slotEngine;
@@ -14,110 +17,150 @@ public final class SimulationRunner {
 
     public SimulationResult run(
             long numberOfSpins,
-            long betInPence) {
+            long betInCoins) {
 
         if (numberOfSpins <= 0) {
             throw new IllegalArgumentException(
                     "Number of spins must be positive");
         }
 
-        if (betInPence <= 0) {
+        if (betInCoins <= 0) {
             throw new IllegalArgumentException(
                     "Bet must be positive");
         }
 
         GameState gameState = new GameState();
 
-        long totalSpentInPence = 0;
-        long totalPaidInPence = 0;
+        long totalSpentInCoins = 0;
+        long totalPaidInCoins = 0;
         long winningSpins = 0;
 
-        long largestPayoutInPence = 0;
-        long largestCyclePayoutInPence = 0;
+        long largestPayoutInCoins = 0;
+        long largestCyclePayoutInCoins = 0;
 
-        long currentCyclePayoutInPence = 0;
+        long currentCyclePayoutInCoins = 0;
 
         long currentFreeSpinRun = 0;
         long longestFreeSpinRun = 0;
 
-        long baseGamePaidInPence = 0;
+        long baseGamePaidInCoins = 0;
 
         long paidSpins = 0;
         long totalSpins = 0;
 
+        Map<PayoutBucket, Long> payoutDistribution =
+                new EnumMap<>(PayoutBucket.class);
+
+        for (PayoutBucket bucket : PayoutBucket.values()) {
+            payoutDistribution.put(bucket, 0L);
+        }
+
         while (paidSpins < numberOfSpins || gameState.hasFreeSpins()) {
 
-            boolean isFreeSpin = gameState.hasFreeSpins();
+            boolean isFreeSpin =
+                    gameState.hasFreeSpins();
 
             SpinResult result =
-                    slotEngine.spin(betInPence, gameState);
+                    slotEngine.spin(
+                            betInCoins,
+                            gameState);
 
             totalSpins++;
 
             if (isFreeSpin) {
+
                 currentFreeSpinRun++;
 
                 longestFreeSpinRun = Math.max(
                         longestFreeSpinRun,
                         currentFreeSpinRun);
+
             } else {
+
                 currentFreeSpinRun = 0;
             }
 
-            totalSpentInPence = Math.addExact(
-                    totalSpentInPence,
-                    result.amountChargedInPence());
+            totalSpentInCoins = Math.addExact(
+                    totalSpentInCoins,
+                    result.amountChargedInCoins());
 
-            totalPaidInPence = Math.addExact(
-                    totalPaidInPence,
-                    result.payoutInPence());
+            totalPaidInCoins = Math.addExact(
+                    totalPaidInCoins,
+                    result.payoutInCoins());
 
-            currentCyclePayoutInPence = Math.addExact(
-                    currentCyclePayoutInPence,
-                    result.payoutInPence());
+            currentCyclePayoutInCoins = Math.addExact(
+                    currentCyclePayoutInCoins,
+                    result.payoutInCoins());
 
             if (!isFreeSpin) {
+
                 paidSpins++;
 
-                baseGamePaidInPence = Math.addExact(
-                        baseGamePaidInPence,
-                        result.payoutInPence());
+                baseGamePaidInCoins = Math.addExact(
+                        baseGamePaidInCoins,
+                        result.payoutInCoins());
             }
 
             if (result.outcome().isWin()) {
                 winningSpins++;
             }
 
-            largestPayoutInPence = Math.max(
-                    largestPayoutInPence,
-                    result.payoutInPence());
+            largestPayoutInCoins = Math.max(
+                    largestPayoutInCoins,
+                    result.payoutInCoins());
 
+            /*
+             * If there are no free spins remaining,
+             * this paid-spin cycle has finished.
+             *
+             * A cycle is:
+             *
+             * paid spin
+             * + any free spins triggered
+             * + any retriggered free spins
+             */
             if (!gameState.hasFreeSpins()) {
 
-                largestCyclePayoutInPence = Math.max(
-                        largestCyclePayoutInPence,
-                        currentCyclePayoutInPence);
+                largestCyclePayoutInCoins = Math.max(
+                        largestCyclePayoutInCoins,
+                        currentCyclePayoutInCoins);
 
-                currentCyclePayoutInPence = 0;
+                double payoutMultiple =
+                        (double) currentCyclePayoutInCoins
+                                / betInCoins;
+
+                PayoutBucket bucket =
+                        PayoutBucket.from(
+                                payoutMultiple);
+
+                payoutDistribution.merge(
+                        bucket,
+                        1L,
+                        Long::sum);
+
+                currentCyclePayoutInCoins = 0;
             }
         }
 
-        long freeSpins = totalSpins - paidSpins;
+        long freeSpins =
+                totalSpins - paidSpins;
 
-        long freeSpinPaidInPence =
-                totalPaidInPence - baseGamePaidInPence;
+        long freeSpinPaidInCoins =
+                totalPaidInCoins
+                        - baseGamePaidInCoins;
 
         return new SimulationResult(
                 totalSpins,
                 paidSpins,
                 freeSpins,
-                totalSpentInPence,
-                totalPaidInPence,
-                baseGamePaidInPence,
-                freeSpinPaidInPence,
+                totalSpentInCoins,
+                totalPaidInCoins,
+                baseGamePaidInCoins,
+                freeSpinPaidInCoins,
                 winningSpins,
-                largestPayoutInPence,
-                largestCyclePayoutInPence,
-                longestFreeSpinRun);
+                largestPayoutInCoins,
+                largestCyclePayoutInCoins,
+                longestFreeSpinRun,
+                payoutDistribution);
     }
 }

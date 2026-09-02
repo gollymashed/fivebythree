@@ -3,6 +3,9 @@ package com.studiomashed.fivebythree.simulation;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import java.util.Map;
+
 @JsonPropertyOrder({
         "totalSpins",
         "paidSpins",
@@ -16,36 +19,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "largestCyclePayout",
         "longestFreeSpinRun",
         "rtpPercentage",
-        "hitFrequencyPercentage"
+        "hitFrequencyPercentage",
+        "payoutDistribution"
 })
 public record SimulationResult(
         long totalSpins,
         long paidSpins,
         long freeSpins,
         @JsonIgnore
-        long totalStakedInPence,
+        long totalStakedInCoins,
         @JsonIgnore
-        long totalPaidInPence,
+        long totalPaidInCoins,
         @JsonIgnore
-        long baseGamePaidInPence,
+        long baseGamePaidInCoins,
         @JsonIgnore
-        long freeSpinPaidInPence,
+        long freeSpinPaidInCoins,
         long winningSpins,
         @JsonIgnore
-        long largestPayoutInPence,
+        long largestPayoutInCoins,
         @JsonIgnore
-        long largestCyclePayoutInPence,
-        long longestFreeSpinRun) {
+        long largestCyclePayoutInCoins,
+        long longestFreeSpinRun,
+        Map<PayoutBucket, Long> payoutDistribution) {
 
     @JsonProperty
     public String rtpPercentage() {
-        if (totalStakedInPence == 0) {
+        if (totalStakedInCoins == 0) {
             return "0.00%";
         }
 
         double rtp =
-                (double) totalPaidInPence
-                        / totalStakedInPence
+                (double) totalPaidInCoins
+                        / totalStakedInCoins
                         * 100.0;
 
         return String.format("%.2f%%", rtp);
@@ -67,35 +72,35 @@ public record SimulationResult(
 
     @JsonProperty
     public String totalStaked() {
-        return formatCurrency(totalStakedInPence);
+        return formatCoins(totalStakedInCoins);
     }
 
     @JsonProperty
     public String totalPaid() {
-        return formatCurrency(totalPaidInPence);
+        return formatCoins(totalPaidInCoins);
     }
 
     @JsonProperty
     public String baseGamePaid() {
-        return formatCurrency(baseGamePaidInPence);
+        return formatCoins(baseGamePaidInCoins);
     }
 
     @JsonProperty
     public String freeSpinPaid() {
-        return formatCurrency(freeSpinPaidInPence);
+        return formatCoins(freeSpinPaidInCoins);
     }
 
     @JsonProperty
     public String largestPayout() {
-        return formatCurrency(largestPayoutInPence);
+        return formatCoins(largestPayoutInCoins);
     }
 
     @JsonProperty
     public String largestCyclePayout() {
-        return formatCurrency(largestCyclePayoutInPence);
+        return formatCoins(largestCyclePayoutInCoins);
     }
 
-    private static String formatCurrency(long pence) {
-        return String.format("$%,.2f", pence / 100.0);
+    private static String formatCoins(long coins) {
+        return String.format("%,d coins", coins);
     }
 }

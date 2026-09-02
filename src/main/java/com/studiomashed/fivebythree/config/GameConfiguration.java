@@ -33,18 +33,20 @@ public class GameConfiguration {
     @Bean
     public PaylinePaytable paylinePaytable() {
         Map<Symbol, int[]> payouts = Map.of(
-                Symbol.LP1, new int[]{0, 0, 0, 4, 8, 12},
-                Symbol.LP2, new int[]{0, 0, 0, 4, 8, 12},
-                Symbol.LP3, new int[]{0, 0, 0, 4, 8, 12},
-                Symbol.LP4, new int[]{0, 0, 0, 4, 8, 12},
-                Symbol.MP1, new int[]{0, 0, 0, 8, 24, 48},
-                Symbol.MP2, new int[]{0, 0, 0, 8, 24, 48},
-                Symbol.MP3, new int[]{0, 0, 0, 8, 24, 48},
-                Symbol.HP1, new int[]{0, 0, 0, 48, 120, 500},
-                Symbol.WILD, new int[]{0, 0, 0, 84, 1000, 12000});
+                Symbol.LP1, new int[]{0, 0, 0, 2, 4, 6},
+                Symbol.LP2, new int[]{0, 0, 0, 2, 4, 6},
+                Symbol.LP3, new int[]{0, 0, 0, 2, 4, 6},
+                Symbol.LP4, new int[]{0, 0, 0, 2, 4, 6},
+                Symbol.MP1, new int[]{0, 0, 0, 4, 12, 24},
+                Symbol.MP2, new int[]{0, 0, 0, 4, 12, 24},
+                Symbol.MP3, new int[]{0, 0, 0, 4, 12, 24},
+                Symbol.HP1, new int[]{0, 0, 0, 24, 60, 250},
+                Symbol.WILD, new int[]{0, 0, 0, 42, 500, 6000});
 
         return new PaylinePaytable(payouts);
     }
+
+    public static final int COINS_PER_BET = 10;
 
     @Bean
     public WinEvaluator winEvaluator(PaylinePaytable paylinePaytable) {
