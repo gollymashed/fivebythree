@@ -1,7 +1,7 @@
 package com.studiomashed.fivebythree.simulation;
 
 import com.studiomashed.fivebythree.engine.SlotEngine;
-import com.studiomashed.fivebythree.model.GameState;
+import com.studiomashed.fivebythree.state.GameState;
 import com.studiomashed.fivebythree.model.SpinResult;
 
 import java.util.EnumMap;

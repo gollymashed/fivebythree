@@ -1,4 +1,11 @@
 package com.studiomashed.fivebythree.model;
 
-public record ScatterResult(int count, int payoutMultiplier, int freeSpins) {
+import com.studiomashed.fivebythree.feature.FreeSpinMode;
+
+public record ScatterResult(
+        int count,
+        int payoutMultiplier,
+        int freeSpins,
+        FreeSpinMode freeSpinMode
+) {
 }

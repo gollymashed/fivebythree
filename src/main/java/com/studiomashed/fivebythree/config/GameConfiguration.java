@@ -1,6 +1,8 @@
 package com.studiomashed.fivebythree.config;
 
 import com.studiomashed.fivebythree.engine.ScatterEvaluator;
+import com.studiomashed.fivebythree.feature.FreeSpinMode;
+import com.studiomashed.fivebythree.feature.StickyWildHandler;
 import com.studiomashed.fivebythree.model.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,9 +64,19 @@ public class GameConfiguration {
                 0, 0, 0, 1, 10, 25
         };
 
+        FreeSpinMode[] freeSpinModes = {
+                null,
+                null,
+                null,
+                FreeSpinMode.RESPIN_PER_WILD,
+                FreeSpinMode.SYMBOL_MULTIPLIERS,
+                FreeSpinMode.STICKY_WILDS
+        };
+
         return new ScatterPaytable(
                 payoutMultipliers,
-                freeSpins
+                freeSpins,
+                freeSpinModes
         );
     }
 
@@ -74,10 +86,16 @@ public class GameConfiguration {
     }
 
     @Bean
+    public StickyWildHandler stickyWildHandler() {
+        return new StickyWildHandler();
+    }
+
+    @Bean
     public SlotEngine slotEngine(
             OutcomeGenerator outcomeGenerator,
             WinEvaluator winEvaluator,
-            ScatterEvaluator scatterEvaluator) {
+            ScatterEvaluator scatterEvaluator,
+            StickyWildHandler stickyWildHandler) {
         List<Symbol> reel1 = List.of(
                 Symbol.LP1,
                 Symbol.MP1,
@@ -214,7 +232,8 @@ public class GameConfiguration {
                 paylines,
                 outcomeGenerator,
                 winEvaluator,
-                scatterEvaluator);
+                scatterEvaluator,
+                stickyWildHandler);
     }
 
     @Bean
