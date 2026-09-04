@@ -1,7 +1,7 @@
 package com.studiomashed.fivebythree.simulation;
 
 import com.studiomashed.fivebythree.engine.SlotEngine;
-import com.studiomashed.fivebythree.model.GameState;
+import com.studiomashed.fivebythree.state.GameState;
 import com.studiomashed.fivebythree.model.SpinResult;
 
 import java.util.EnumMap;
@@ -37,6 +37,9 @@ public final class SimulationRunner {
 
         long largestPayoutInCoins = 0;
         long largestCyclePayoutInCoins = 0;
+
+        SpinResult largestPayoutResult = null;
+        long largestPayoutSpinNumber = -1;
 
         long currentCyclePayoutInCoins = 0;
 
@@ -105,9 +108,21 @@ public final class SimulationRunner {
                 winningSpins++;
             }
 
-            largestPayoutInCoins = Math.max(
-                    largestPayoutInCoins,
-                    result.payoutInCoins());
+            /*
+             * Keep the full result for the single largest
+             * individual-spin payout seen in the simulation.
+             */
+            if (result.payoutInCoins() > largestPayoutInCoins) {
+
+                largestPayoutInCoins =
+                        result.payoutInCoins();
+
+                largestPayoutResult =
+                        result;
+
+                largestPayoutSpinNumber =
+                        totalSpins;
+            }
 
             /*
              * If there are no free spins remaining,
@@ -147,6 +162,50 @@ public final class SimulationRunner {
         long freeSpinPaidInCoins =
                 totalPaidInCoins
                         - baseGamePaidInCoins;
+
+        /*
+         * Print the largest individual spin once,
+         * after the simulation is complete.
+         */
+        if (largestPayoutResult != null) {
+
+            System.out.println();
+            System.out.println("=== LARGEST PAYOUT SPIN ===");
+            System.out.println(
+                    "Spin number: "
+                            + largestPayoutSpinNumber);
+
+            System.out.println(
+                    "Payout: "
+                            + largestPayoutInCoins
+                            + " coins");
+
+            System.out.println(
+                    "Grid: "
+                            + largestPayoutResult
+                            .outcome()
+                            .grid());
+
+            System.out.println(
+                    "Wins: "
+                            + largestPayoutResult
+                            .outcome()
+                            .wins());
+
+            System.out.println(
+                    "Scatter: "
+                            + largestPayoutResult
+                            .outcome()
+                            .scatterResult());
+
+            System.out.println(
+                    "Free spin status: "
+                            + largestPayoutResult
+                            .freeSpinStatus());
+
+            System.out.println("==========================");
+            System.out.println();
+        }
 
         return new SimulationResult(
                 totalSpins,

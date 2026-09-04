@@ -3,6 +3,7 @@ package com.studiomashed.fivebythree.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.studiomashed.fivebythree.feature.FreeSpinMode;
 import com.studiomashed.fivebythree.model.Reel;
 import com.studiomashed.fivebythree.model.ReelWindow;
 import com.studiomashed.fivebythree.model.SpinGrid;

@@ -1,6 +1,6 @@
 package com.studiomashed.fivebythree.api;
 
-import com.studiomashed.fivebythree.model.GameState;
+import com.studiomashed.fivebythree.state.GameState;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -1,12 +1,19 @@
 package com.studiomashed.fivebythree.engine;
 
-import com.studiomashed.fivebythree.model.*;
+import com.studiomashed.fivebythree.feature.FreeSpinMode;
+import com.studiomashed.fivebythree.model.ReelWindow;
+import com.studiomashed.fivebythree.model.ScatterPaytable;
+import com.studiomashed.fivebythree.model.ScatterResult;
+import com.studiomashed.fivebythree.model.SpinGrid;
+import com.studiomashed.fivebythree.model.Symbol;
 
-public class ScatterEvaluator {
+public final class ScatterEvaluator {
 
     private final ScatterPaytable scatterPaytable;
 
-    public ScatterEvaluator(ScatterPaytable scatterPaytable) {
+    public ScatterEvaluator(
+            ScatterPaytable scatterPaytable
+    ) {
         this.scatterPaytable = scatterPaytable;
     }
 
@@ -14,15 +21,25 @@ public class ScatterEvaluator {
         int scatterCount = scatterCount(grid);
 
         int payoutMultiplier =
-                scatterPaytable.payoutMultiplierFor(scatterCount);
+                scatterPaytable.payoutMultiplierFor(
+                        scatterCount
+                );
 
         int freeSpins =
-                scatterPaytable.freeSpinsFor(scatterCount);
+                scatterPaytable.freeSpinsFor(
+                        scatterCount
+                );
+
+        FreeSpinMode freeSpinMode =
+                scatterPaytable.freeSpinModeFor(
+                        scatterCount
+                );
 
         return new ScatterResult(
                 scatterCount,
                 payoutMultiplier,
-                freeSpins
+                freeSpins,
+                freeSpinMode
         );
     }
 
