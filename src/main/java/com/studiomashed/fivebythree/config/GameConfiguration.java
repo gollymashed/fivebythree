@@ -3,6 +3,7 @@ package com.studiomashed.fivebythree.config;
 import com.studiomashed.fivebythree.engine.ScatterEvaluator;
 import com.studiomashed.fivebythree.feature.FreeSpinMode;
 import com.studiomashed.fivebythree.feature.StickyWildHandler;
+import com.studiomashed.fivebythree.feature.SymbolMultiplierHandler;
 import com.studiomashed.fivebythree.model.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +43,7 @@ public class GameConfiguration {
                 Symbol.MP2, new int[]{0, 0, 0, 4, 12, 24},
                 Symbol.MP3, new int[]{0, 0, 0, 4, 12, 24},
                 Symbol.HP1, new int[]{0, 0, 0, 24, 60, 250},
-                Symbol.WILD, new int[]{0, 0, 0, 42, 500, 6000});
+                Symbol.WILD, new int[]{0, 0, 0, 42, 250, 2500});
 
         return new PaylinePaytable(payouts);
     }
@@ -57,11 +58,11 @@ public class GameConfiguration {
     @Bean
     public ScatterPaytable scatterPaytable() {
         int[] payoutMultipliers = {
-                0, 0, 0, 2, 10, 100
+                0, 0, 0, 0, 2, 5
         };
 
         int[] freeSpins = {
-                0, 0, 0, 1, 10, 25
+                0, 0, 0, 1, 4, 8
         };
 
         FreeSpinMode[] freeSpinModes = {
@@ -91,11 +92,30 @@ public class GameConfiguration {
     }
 
     @Bean
+    public Map<Symbol, Integer> SymbolFeatureMultipliers() {
+        return Map.of(
+                Symbol.MP1, 2,
+                Symbol.MP2, 3,
+                Symbol.MP3, 4
+        );
+    }
+
+    @Bean
+    public SymbolMultiplierHandler symbolMultiplierHandler(
+            Map<Symbol, Integer> symbolFeatureMultipliers
+    ) {
+        return new SymbolMultiplierHandler(
+                symbolFeatureMultipliers
+        );
+    }
+
+    @Bean
     public SlotEngine slotEngine(
             OutcomeGenerator outcomeGenerator,
             WinEvaluator winEvaluator,
             ScatterEvaluator scatterEvaluator,
-            StickyWildHandler stickyWildHandler) {
+            StickyWildHandler stickyWildHandler,
+            SymbolMultiplierHandler symbolMultiplierHandler) {
         List<Symbol> reel1 = List.of(
                 Symbol.LP1,
                 Symbol.MP1,
@@ -233,7 +253,8 @@ public class GameConfiguration {
                 outcomeGenerator,
                 winEvaluator,
                 scatterEvaluator,
-                stickyWildHandler);
+                stickyWildHandler,
+                symbolMultiplierHandler);
     }
 
     @Bean

@@ -7,6 +7,7 @@ import com.studiomashed.fivebythree.config.GameConfiguration;
 import com.studiomashed.fivebythree.feature.FreeSpinMode;
 import com.studiomashed.fivebythree.feature.FreeSpinStatus;
 import com.studiomashed.fivebythree.feature.StickyWildHandler;
+import com.studiomashed.fivebythree.feature.SymbolMultiplierHandler;
 import com.studiomashed.fivebythree.model.*;
 import com.studiomashed.fivebythree.state.FreeSpinState;
 import com.studiomashed.fivebythree.state.GameState;
@@ -19,8 +20,17 @@ public final class SlotEngine {
     private final WinEvaluator winEvaluator;
     private final ScatterEvaluator scatterEvaluator;
     private final StickyWildHandler stickyWildHandler;
+    private final SymbolMultiplierHandler symbolMultiplierHandler;
 
-    public SlotEngine(List<Reel> reels, List<Payline> paylines, OutcomeGenerator outcomeGenerator, WinEvaluator winEvaluator, ScatterEvaluator scatterEvaluator, StickyWildHandler stickyWildHandler) {
+    public SlotEngine(
+            List<Reel> reels,
+            List<Payline> paylines,
+            OutcomeGenerator outcomeGenerator,
+            WinEvaluator winEvaluator,
+            ScatterEvaluator scatterEvaluator,
+            StickyWildHandler stickyWildHandler,
+            SymbolMultiplierHandler symbolMultiplierHandler
+    ) {
         if (reels.size() != 5) {
             throw new IllegalArgumentException("A 5x3 slot must contain exactly 5 reels");
         }
@@ -31,6 +41,7 @@ public final class SlotEngine {
         this.winEvaluator = winEvaluator;
         this.scatterEvaluator = scatterEvaluator;
         this.stickyWildHandler = stickyWildHandler;
+        this.symbolMultiplierHandler = symbolMultiplierHandler;
     }
 
     public SpinResult spin(long requestedBetInCoins, GameState gameState) {
@@ -48,8 +59,8 @@ public final class SlotEngine {
             throw new IllegalArgumentException("Bet must be positive");
         }
 
-        if (totalBetInCoins % paylines.size() != 0) {
-            throw new IllegalArgumentException("Bet must be divisible by number of paylines");
+        if (totalBetInCoins % GameConfiguration.COINS_PER_BET != 0) {
+            throw new IllegalArgumentException("Bet must be divisible by minimum bet");
         }
 
         long amountChargedInCoins = isFreeSpin ? 0 : totalBetInCoins;
@@ -63,6 +74,10 @@ public final class SlotEngine {
         gameState.setLastGrid(grid);
 
         List<Win> wins = winEvaluator.evaluate(grid, paylines);
+
+        if (activeFreeSpinMode == FreeSpinMode.SYMBOL_MULTIPLIERS) {
+            wins = symbolMultiplierHandler.apply(wins);
+        }
 
         long paylinesPayout = calculatePaylinesPayout(wins, totalBetInCoins);
 
