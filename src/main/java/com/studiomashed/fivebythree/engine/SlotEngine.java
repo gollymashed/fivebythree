@@ -42,7 +42,7 @@ public final class SlotEngine {
                     "Stake must be positive");
         }
 
-        if (totalBetInCoins % paylines.size() != 0) {
+        if (totalBetInCoins % GameConfiguration.COINS_PER_BET != 0) {
             throw new IllegalArgumentException(
                     "Bet must be divisible by number of paylines");
         }

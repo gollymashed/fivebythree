@@ -1,15 +1,21 @@
 export type PayoutBucket =
     | "ZERO"
-    | "UP_TO_0_2X"
-    | "UP_TO_0_5X"
-    | "UP_TO_1X"
-    | "UP_TO_2X"
-    | "UP_TO_5X"
-    | "UP_TO_10X"
-    | "UP_TO_50X"
-    | "UP_TO_100X"
-    | "UP_TO_500X"
-    | "OVER_500X";
+    | "OVER_0_TO_0_25X"
+    | "OVER_0_25_TO_0_5X"
+    | "OVER_0_5_TO_1X"
+    | "OVER_1_TO_2X"
+    | "OVER_2_TO_4X"
+    | "OVER_4_TO_8X"
+    | "OVER_8_TO_16X"
+    | "OVER_16_TO_32X"
+    | "OVER_32_TO_64X"
+    | "OVER_64_TO_128X"
+    | "OVER_128_TO_256X"
+    | "OVER_256_TO_512X"
+    | "OVER_512_TO_1024X"
+    | "OVER_1024_TO_2048X"
+    | "OVER_2048_TO_4096X"
+    | "OVER_4096X";
 
 export interface SimulationResult {
     totalSpins: number;

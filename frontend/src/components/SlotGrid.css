@@ -2,11 +2,12 @@
   position: relative;
 
   display: grid;
-  grid-template-columns: repeat(3, 120px);
+  grid-template-columns: repeat(5, 120px);
   grid-template-rows: repeat(3, 120px);
 
   gap: 10px;
 
+  width: fit-content;
   background: #1f1f1f;
 
   justify-content: center;
@@ -27,7 +28,6 @@
 
   font-size: 60px;
 }
-
 
 /* -------------------- */
 /* PAYLINES             */
@@ -50,7 +50,6 @@
   transform-origin: center;
 }
 
-
 /* Payline 1 — middle */
 
 .payline.payline-1 {
@@ -58,7 +57,6 @@
 
   background: gold;
 }
-
 
 /* Payline 2 — top */
 
@@ -68,7 +66,6 @@
   background: limegreen;
 }
 
-
 /* Payline 3 — bottom */
 
 .payline.payline-3 {
@@ -77,24 +74,39 @@
   background: dodgerblue;
 }
 
+/*
+ * The centres of the first and fifth reels are
+ * 520px apart horizontally.
+ *
+ * The top and bottom symbol centres are
+ * 260px apart vertically.
+ *
+ * atan(260 / 520) = 26.565deg
+ * diagonal length = 581.38px
+ */
 
 /* Payline 4 — diagonal down */
 
 .payline.payline-4 {
   top: 50%;
+  left: calc(50% - 290.69px);
+
+  width: 581.38px;
 
   background: hotpink;
 
-  transform: rotate(45deg);
+  transform: rotate(26.565deg);
 }
-
 
 /* Payline 5 — diagonal up */
 
 .payline.payline-5 {
   top: 50%;
+  left: calc(50% - 290.69px);
+
+  width: 581.38px;
 
   background: orange;
 
-  transform: rotate(-45deg);
+  transform: rotate(-26.565deg);
 }

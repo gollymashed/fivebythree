@@ -7,9 +7,11 @@ import "./SlotPage.css";
 
 const DEFAULT_GRID: SpinGrid = {
     reels: [
-        { symbols: ["CHERRY", "LEMON", "BELL"] },
-        { symbols: ["LEMON", "BELL", "SEVEN"] },
-        { symbols: ["BELL", "SEVEN", "WILD"] },
+        { symbols: ["LP1", "LP1", "LP1"] },
+        { symbols: ["LP2", "LP2", "LP2"] },
+        { symbols: ["LP3", "LP3", "LP3"] },
+        { symbols: ["LP4", "LP4", "LP4"] },
+        { symbols: ["MP1", "MP1", "MP1"] },
     ],
 };
 
@@ -17,16 +19,14 @@ export function SlotPage() {
     const [result, setResult] = useState<SpinResult | null>(null);
     const [isSpinning, setIsSpinning] = useState(false);
 
-    const [balanceInPence, setBalanceInPence] = useState(10_000);
-    const [stakePerLineInPence, setStakePerLineInPence] = useState(20);
-    const [numberOfPaylines, setNumberOfPaylines] = useState(5);
+    const [balanceInCoins, setBalanceInCoins] = useState(10_000);
+    const [stakeInCoins, setStakeInCoins] = useState(20);
 
     const grid = result?.outcome.grid ?? DEFAULT_GRID;
 
     async function handleSpin() {
-        const totalStake = stakePerLineInPence * numberOfPaylines;
 
-        if (balanceInPence < totalStake) {
+        if (balanceInCoins < stakeInCoins) {
             return;
         }
 
@@ -34,17 +34,16 @@ export function SlotPage() {
 
         try {
             const spinResult = await spin(
-                stakePerLineInPence,
-                numberOfPaylines
+                stakeInCoins
             );
 
             setResult(spinResult);
 
-            setBalanceInPence(
+            setBalanceInCoins(
                 (currentBalance) =>
                     currentBalance -
-                    spinResult.totalStakeInPence +
-                    spinResult.payoutInPence
+                    spinResult.amountChargedInCoins +
+                    spinResult.payoutInCoins
             );
         } catch (error) {
             console.error("Spin failed:", error);
@@ -56,10 +55,10 @@ export function SlotPage() {
     return (
         <main className="slot-page">
             <div className="machine">
-                <h1>3×3</h1>
+                <h1>5×3</h1>
 
                 <div className="balance">
-                    Balance: £{(balanceInPence / 100).toFixed(2)}
+                    Balance: {balanceInCoins} coins
                 </div>
 
                 <SlotGrid
@@ -78,13 +77,11 @@ export function SlotPage() {
                 {result && (
                     <div className="result">
                         <p>
-                            Stake: £
-                            {(result.totalStakeInPence / 100).toFixed(2)}
+                            Stake: {result.amountChargedInCoins} coins
                         </p>
 
                         <p>
-                            Payout: £
-                            {(result.payoutInPence / 100).toFixed(2)}
+                            Payout: {result.payoutInCoins} coins
                         </p>
 
                         <p>Wins: {result.outcome.wins.length}</p>

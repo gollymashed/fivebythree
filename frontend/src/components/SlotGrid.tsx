@@ -12,40 +12,54 @@ interface SlotGridProps {
 }
 
 const symbolEmoji: Record<SlotSymbol, string> = {
-  CHERRY: "🍒",
-  LEMON: "🍋",
-  BELL: "🔔",
-  SEVEN: "7️⃣",
+  LP1: "🍒",
+  LP2: "🍋",
+  LP3: "🍊",
+  LP4: "🍇",
+  MP1: "🔔",
+  MP2: "💎",
+  MP3: "👑",
+  HP1: "7️⃣",
   WILD: "⭐",
+  SCATTER: "💰",
 };
 
+const ROW_COUNT = 3;
+
 export function SlotGrid({
-  grid,
-  wins,
-}: SlotGridProps) {
+                           grid,
+                           wins,
+                         }: SlotGridProps) {
   return (
-    <div className="slot-grid">
+      <div className="slot-grid">
+        {/* Five reels × three rows */}
+        {Array.from(
+            { length: ROW_COUNT },
+            (_, row) =>
+                grid.reels.map(
+                    (reel, reelIndex) => {
+                      const symbol =
+                          reel.symbols[row];
 
-      {/* Symbols */}
-      {[0, 1, 2].map((row) =>
-        grid.reels.map((reel, reelIndex) => (
-          <div
-            className="grid-symbol"
-            key={`${reelIndex}-${row}`}
-          >
-            {symbolEmoji[reel.symbols[row]]}
-          </div>
-        ))
-      )}
+                      return (
+                          <div
+                              className="grid-symbol"
+                              key={`${reelIndex}-${row}`}
+                          >
+                            {symbolEmoji[symbol]}
+                          </div>
+                      );
+                    }
+                )
+        )}
 
-      {/* Winning paylines */}
-      {wins.map((win) => (
-        <div
-          key={win.paylineId}
-          className={`payline payline-${win.paylineId}`}
-        />
-      ))}
-
-    </div>
+        {/* Winning paylines */}
+        {wins.map((win) => (
+            <div
+                key={win.paylineId}
+                className={`payline payline-${win.paylineId}`}
+            />
+        ))}
+      </div>
   );
 }

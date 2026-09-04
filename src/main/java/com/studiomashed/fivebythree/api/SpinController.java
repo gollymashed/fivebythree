@@ -26,13 +26,13 @@ public class SpinController {
     @PostMapping("/spin")
     public SpinResult spin(
             @RequestParam String playerId,
-            @RequestParam(defaultValue = "100") long stakeInPence) {
+            @RequestParam(defaultValue = "10") long stakeInCoins) {
 
         GameState gameState = gameStates.computeIfAbsent(
                 playerId,
                 id -> new GameState()
         );
 
-        return slotEngine.spin(stakeInPence, gameState);
+        return slotEngine.spin(stakeInCoins, gameState);
     }
 }

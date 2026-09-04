@@ -130,8 +130,7 @@ public final class SimulationRunner {
                                 / betInCoins;
 
                 PayoutBucket bucket =
-                        PayoutBucket.from(
-                                payoutMultiple);
+                        PayoutBucket.from(payoutMultiple);
 
                 payoutDistribution.merge(
                         bucket,

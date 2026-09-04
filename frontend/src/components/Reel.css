@@ -1,7 +1,9 @@
 .reel-window {
   width: 120px;
-  height: 140px;
+  height: 360px;
+
   overflow: hidden;
+
   background: grey;
   border-radius: 10px;
 }
@@ -9,17 +11,19 @@
 .reel-strip {
   display: flex;
   flex-direction: column;
+
   will-change: transform;
 }
 
 .reel-symbol {
   width: 120px;
-  height: 140px;
+  height: 120px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   flex-shrink: 0;
-  font-size: 70px;
+
+  font-size: 60px;
 }
